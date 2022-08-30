@@ -28,6 +28,7 @@ func main() {
 	router := mux.NewRouter()
 	// define the specific handlers to each request and endpoint
 	router.HandleFunc("/planeta", handlers.CreatePlanetEndPoint).Methods("POST")
+	router.HandleFunc("/planeta", handlers.DeletePlanetEndPoint).Methods("DELETE")
 	router.HandleFunc("/planeta", handlers.GetPlanetEndPoint).Methods("GET")
 	router.HandleFunc("/planetas", handlers.GetPlanetsEndPoint).Methods("GET")
 	// loop to listen and respond for requests

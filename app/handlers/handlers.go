@@ -49,9 +49,6 @@ func GetPlanetsEndPoint(response http.ResponseWriter, request *http.Request) {
 	// define the response content-type as json
 	response.Header().Set("content-type", "application/json")
 
-	// define a 'dynamically-sized array' that will receive queries from db
-	var planets []data.Planet
-
 	// define a context that carries the time that will be used as limit to db operation attempt
 	// skip the callback function since errors will be handled if find does not match
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
@@ -67,6 +64,9 @@ func GetPlanetsEndPoint(response http.ResponseWriter, request *http.Request) {
 
 	//if not fail it will close cursor at the end of fucntion's scope
 	defer cursor.Close(ctx)
+
+	// define a 'dynamically-sized array' that will receive queries from db
+	var planets []data.Planet
 
 	// iteraates through cursor and appen to the people slice
 	// if fails, messege error is returned
@@ -92,13 +92,6 @@ func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 			return
 		}
 
-	// define a 'dynamically-sized array' that will receive queries from db
-	var planet []data.Planet
-
-	// define a context that carries the time that will be used as limit to db operation attempt
-	// skip the callback function since errors will be handled if find does not match
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-
 	var filter bson.M
 	if query.Get("id") != "" {
 		v, _ := primitive.ObjectIDFromHex(query.Get("id"))
@@ -107,6 +100,11 @@ func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 		v := query.Get("nome")
 		filter = bson.M{"nome":v}
 	}
+
+	// define a context that carries the time that will be used as limit to db operation attempt
+	// skip the callback function since errors will be handled if find does not match
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
 	// get a cursor 'pointer' to the entries in db with filter
 	// if fails, messege error is returned
 	cursor, err := data.Collection.Find(ctx, filter)
@@ -124,6 +122,9 @@ func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 	//if not fail it will close cursor at the end of fucntion's scope
 	defer cursor.Close(ctx)
 
+	// define a 'dynamically-sized array' that will receive queries from db
+	var planet []data.Planet
+
 	// iteraates through cursor and appen to the people slice
 	// if fails, messege error is returned
 	if err := cursor.All(ctx, &planet); err != nil {
@@ -134,4 +135,38 @@ func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 
 	// encode people slice into json format and append it to the response
 	json.NewEncoder(response).Encode(planet)
+}
+
+func DeletePlanetEndPoint(response http.ResponseWriter, request *http.Request) { 
+	// define the response content-type as json
+	response.Header().Set("content-type", "application/json")
+
+	// get and check params from query string
+	query := request.URL.Query()
+		if query.Get("id") == "" {
+			response.WriteHeader(http.StatusNotFound)
+			response.Write([]byte(`{"message": "` + `Resource Not Found` + `"}`))
+			return
+		}
+
+	v, _ := primitive.ObjectIDFromHex(query.Get("id"))
+	filter := bson.M{"_id":v}
+
+	// define a context that carries the time that will be used as limit to db operation attempt
+	// skip the callback function since errors will be handled if find does not match
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+
+	// try to find a planet by its ID and delete it
+	var deletedDocument bson.M
+	err := data.Collection.FindOneAndDelete(ctx, filter).Decode(&deletedDocument)
+	if err != nil {
+		response.WriteHeader(http.StatusNotFound)
+		response.Write([]byte(`{"message": "` + `Resource Not Found` + `"}`))
+		return
+	} else {
+		response.WriteHeader(http.StatusOK)
+		response.Write([]byte(`{"message": "` + `Resource Has Been Deleted` + `"}`))
+		return
+	}
 }
