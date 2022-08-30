@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"github.com/filipebafica/star_wars_planets_api/data"
 )
 
@@ -77,4 +78,60 @@ func GetPlanetsEndPoint(response http.ResponseWriter, request *http.Request) {
 
 	// encode people slice into json format and append it to the response
 	json.NewEncoder(response).Encode(planets)
+}
+
+func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) { 
+	// define the response content-type as json
+	response.Header().Set("content-type", "application/json")
+
+	// get and check params from query string
+	query := request.URL.Query()
+		if query.Get("id") == "" && query.Get("nome") == "" {
+			response.WriteHeader(http.StatusNotFound)
+			response.Write([]byte(`{"message": "` + `Resource Not Found` + `"}`))
+			return
+		}
+
+	// define a 'dynamically-sized array' that will receive queries from db
+	var planet []data.Planet
+
+	// define a context that carries the time that will be used as limit to db operation attempt
+	// skip the callback function since errors will be handled if find does not match
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	var filter bson.M
+	if query.Get("id") != "" {
+		v, _ := primitive.ObjectIDFromHex(query.Get("id"))
+		filter = bson.M{"_id":v}
+	} else {
+		v := query.Get("nome")
+		filter = bson.M{"nome":v}
+	}
+	// get a cursor 'pointer' to the entries in db with filter
+	// if fails, messege error is returned
+	cursor, err := data.Collection.Find(ctx, filter)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"message": "` + err.Error() + `"}`))
+		return
+	}
+	// if value not found
+	if cursor.RemainingBatchLength() == 0 {
+		response.WriteHeader(http.StatusNotFound)
+		response.Write([]byte(`{"message": "` + `Resource Not Found` + `"}`))
+		return
+	}
+	//if not fail it will close cursor at the end of fucntion's scope
+	defer cursor.Close(ctx)
+
+	// iteraates through cursor and appen to the people slice
+	// if fails, messege error is returned
+	if err := cursor.All(ctx, &planet); err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"message": "` + err.Error() + `"}`))
+		return
+	}
+
+	// encode people slice into json format and append it to the response
+	json.NewEncoder(response).Encode(planet)
 }
