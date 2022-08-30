@@ -4,3 +4,5 @@ go 1.17
 
 require go.mongodb.org/mongo-driver v1.10.0
 require github.com/gorilla/mux v1.8.0
+require github.com/go-playground/validator/v10 v10.11.0
+

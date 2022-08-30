@@ -20,6 +20,13 @@ func CreatePlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 	// decode request data into planet variable
 	json.NewDecoder(request.Body).Decode(&planet)
 
+	// validate request
+	if err := planet.Validate(); err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"message": "` + err.Error() + `"}`))
+		return
+	}
+
 	// define a context that carries the time that will be used as limit to db operation attempt
 	// skip the callback function since errors will be handled if find does not match
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)

@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/go-playground/validator/v10"
 )
 
 var Client *mongo.Client
@@ -13,9 +14,9 @@ var Collection *mongo.Collection
 
 type Planet struct {
 	ID						primitive.ObjectID	`json:"_id,omitempty" bson:"_id,omitempty"`
-	Nome					string				`json:"nome,omitempty" bson:"nome,omitempty"`
-	Clima					string				`json:"clima,omitempty" bson:"clima,omitempty"`
-	Terreno					string				`json:"terreno,omitempty" bson:"terreno,omitempty"`
+	Nome					string				`json:"nome,omitempty" bson:"nome,omitempty" validate:"required"`
+	Clima					string				`json:"clima,omitempty" bson:"clima,omitempty" validate:"required"`
+	Terreno					string				`json:"terreno,omitempty" bson:"terreno,omitempty" validate:"required"`
 	Aparicoes_Em_Filmes		int64				`json:"aparicoes_em_filmes,omitempty" bson:"aparicoes_em_filmes,omitempty"`
 }
 
@@ -36,4 +37,9 @@ func DisconnectDB(ctx context.Context) {
 	if err := Client.Disconnect(ctx); err != nil {
 		panic(err)
 	}
+}
+
+func (planet *Planet) Validate() error {
+	validate := validator.New()
+	return validate.Struct(planet)
 }
