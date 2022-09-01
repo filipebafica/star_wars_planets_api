@@ -25,7 +25,7 @@ $ docker compose up -d
 
 ## 🎈 How to Use
 The following endpoints are available on localhost:8000\
-To insert a planet: `[POST] local/v1/planeta`
+To insert a planet: `[POST] /v1/planeta`
 ```
 {
   "nome": "Coruscant",
