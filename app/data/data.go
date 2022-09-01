@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"net/http"
-	"log"
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -31,13 +30,14 @@ type SWAPIResults struct {
 }
 
 func GetFilmsPlanetWasIn(planet_name string) SWAPIResults {
+	swapiResults := SWAPIResults{}
 	resp, err := http.Get("https://swapi.dev/api/planets/?search=" + planet_name)
 	if err != nil {
-		log.Fatal(err)
+		return swapiResults
+
 	}
 	defer resp.Body.Close()
 
-	var swapiResults SWAPIResults
 	json.NewDecoder(resp.Body).Decode(&swapiResults)
 
 	return swapiResults

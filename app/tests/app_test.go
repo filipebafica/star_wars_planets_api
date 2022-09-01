@@ -68,7 +68,8 @@ func TestSearchPlanet(t *testing.T) {
 	t.Run("Valid Search By Name", func(t *testing.T) {
 		apitest.New().
 			Handler(r).
-			Get("/v1/planeta?nome=Tatooine").
+			Get("/v1/planeta").
+			Query("nome", "Tatooine").
 			Expect(t).
 			Status(http.StatusOK).
 			End()
@@ -76,7 +77,8 @@ func TestSearchPlanet(t *testing.T) {
 	t.Run("Invalid Search By Name", func(t *testing.T) {
 		apitest.New().
 			Handler(r).
-			Get("/v1/planeta?nome=test").
+			Get("/v1/planeta").
+			Query("nome", "test").
 			Expect(t).
 			Status(http.StatusNotFound).
 			End()
@@ -91,7 +93,8 @@ func TestSearchPlanet(t *testing.T) {
 	t.Run("Valid Search By ID", func(t *testing.T) {
 		apitest.New().
 			Handler(r).
-			Get("/v1/planeta?id=" + string(result.ID.Hex())).
+			Get("/v1/planeta").
+			Query("id", string(result.ID.Hex())).
 			Expect(t).
 			Status(http.StatusOK).
 			End()
@@ -99,7 +102,8 @@ func TestSearchPlanet(t *testing.T) {
 	t.Run("Invalid Search By ID", func(t *testing.T) {
 		apitest.New().
 			Handler(r).
-			Get("/v1/planeta?id=test").
+			Get("/v1/planeta").
+			Query("id", "test").
 			Expect(t).
 			Status(http.StatusNotFound).
 			End()
@@ -136,7 +140,8 @@ func TestDeletePlanet(t *testing.T) {
 	t.Run("Valid Deletion", func(t *testing.T) {
 		apitest.New().
 			Handler(r).
-			Delete("/v1/planeta?id=" + string(result.ID.Hex())).
+			Delete("/v1/planeta").
+			Query("id", string(result.ID.Hex())).
 			Expect(t).
 			Status(http.StatusOK).
 			End()
@@ -144,7 +149,8 @@ func TestDeletePlanet(t *testing.T) {
 	t.Run("Invalid Deletion", func(t *testing.T) {
 		apitest.New().
 			Handler(r).
-			Delete("/v1/planeta?id=test").
+			Delete("/v1/planeta").
+			Query("id", "test").
 			Expect(t).
 			Status(http.StatusNotFound).
 			End()
