@@ -23,16 +23,16 @@ func main() {
 	defer cancel()
 
 	// handle db connection
-	data.ConnectDB(ctx)
+	data.ConnectDB(ctx, "swPlanets")
 	defer data.DisconnectDB(ctx)
 
 	// define a router to handle requests
 	router := mux.NewRouter()
 	// define the specific handlers to each request and endpoint
-	router.HandleFunc("/planeta", handlers.CreatePlanetEndPoint).Methods("POST")
-	router.HandleFunc("/planeta", handlers.DeletePlanetEndPoint).Methods("DELETE")
-	router.HandleFunc("/planeta", handlers.GetPlanetEndPoint).Methods("GET")
-	router.HandleFunc("/planetas", handlers.GetPlanetsEndPoint).Methods("GET")
+	router.HandleFunc("/v1/planeta", handlers.CreatePlanetEndPoint).Methods("POST")
+	router.HandleFunc("/v1/planeta", handlers.DeletePlanetEndPoint).Methods("DELETE")
+	router.HandleFunc("/v1/planeta", handlers.GetPlanetEndPoint).Methods("GET")
+	router.HandleFunc("/v1/planetas", handlers.GetPlanetsEndPoint).Methods("GET")
 	// loop to listen and respond for requests
 	http.ListenAndServe(":8000", router)
 }

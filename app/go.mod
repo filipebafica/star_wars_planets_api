@@ -6,9 +6,13 @@ require go.mongodb.org/mongo-driver v1.10.0
 
 require github.com/gorilla/mux v1.8.0
 
-require github.com/go-playground/validator/v10 v10.11.0
+require (
+	github.com/go-playground/validator/v10 v10.11.0
+	github.com/steinfletcher/apitest v1.5.12
+)
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect

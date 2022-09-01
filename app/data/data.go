@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"log"
 	"encoding/json"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -44,16 +43,19 @@ func GetFilmsPlanetWasIn(planet_name string) SWAPIResults {
 	return swapiResults
 }
 
-func ConnectDB(ctx context.Context) {
+func ConnectDB(ctx context.Context, collectionName string) {
 	// try to establish connection with the mongodb
 	// if fails, program will finish execution
-	Client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://user:password@mongodb:27017"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://user:password@mongodb:27017"))
 	if err != nil {
 		panic(err)
 	}
-
+	Client = client
 	// define which database and which collection 'table' is going to be accessed
-	Collection = Client.Database("starwarsdb").Collection("planets")
+	collection := Client.Database("starwarsdb").Collection(collectionName)
+	if (Collection == nil) {
+	}
+	Collection = collection
 }
 
 func DisconnectDB(ctx context.Context) {

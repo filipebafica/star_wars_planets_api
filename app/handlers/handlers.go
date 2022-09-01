@@ -15,17 +15,16 @@ func CreatePlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 	// define the response content-type as json
 	response.Header().Set("content-type", "application/json")
 
-	defer request.Body.Close()
-
 	// define a variable that will receive the request data
 	var planet data.Planet
 
 	// decode request data into planet variable
 	json.NewDecoder(request.Body).Decode(&planet)
+	defer request.Body.Close()
 
 	// validate request
 	if err := planet.Validate(); err != nil {
-		response.WriteHeader(http.StatusInternalServerError)
+		response.WriteHeader(http.StatusBadRequest)
 		response.Write([]byte(`{"message": "` + err.Error() + `"}`))
 		return
 	}
@@ -78,7 +77,7 @@ func GetPlanetsEndPoint(response http.ResponseWriter, request *http.Request) {
 	// define a 'dynamically-sized array' that will receive queries from db
 	var planets []data.Planet
 
-	// iteraates through cursor and appen to the people slice
+	// iteraates through cursor and append to the people slice
 	// if fails, messege error is returned
 	if err := cursor.All(ctx, &planets); err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
@@ -168,7 +167,7 @@ func DeletePlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 
 
 	// try to find a planet by its ID and delete it
-	var deletedDocument bson.M
+	var deletedDocument data.Planet
 	err := data.Collection.FindOneAndDelete(ctx, filter).Decode(&deletedDocument)
 	if err != nil {
 		response.WriteHeader(http.StatusNotFound)
