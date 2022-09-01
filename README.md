@@ -12,7 +12,7 @@ This is an API to handle Star Wars Planets.\
 It was used: Golang, Docker and MongoDB.
 
 ## 🏁 Getting Started
-You need to have Docker.
+You need to have Docker and Docker Compose (v 3.9 was used to this projetc, you may change on `docker-compose.yml` first line).
 
 #### ⚙️ Installing
 To compile the code, clone the repo, and run the following commands.
