@@ -85,7 +85,7 @@ func TestSearchPlanet(t *testing.T) {
 	})
 
 	var result data.Planet
-	err := data.Collection.FindOne(ctx, bson.D{{"nome", "Tatooine"}}).Decode(&result)
+	err := data.Collection.FindOne(ctx, bson.D{{"name", "Tatooine"}}).Decode(&result)
 	if err != nil {
 		return
 	}
@@ -132,7 +132,7 @@ func TestDeletePlanet(t *testing.T) {
 	})
 
 	var result data.Planet
-	err := data.Collection.FindOne(ctx, bson.D{{"nome", "Tatooine"}}).Decode(&result)
+	err := data.Collection.FindOne(ctx, bson.D{{"name", "Tatooine"}}).Decode(&result)
 	if err != nil {
 		return
 	}
