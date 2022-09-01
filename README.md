@@ -64,6 +64,7 @@ $ docker compose exec app bash
 $ cd tests
 $ go test -v
 ```
-![Capturar](https://user-images.githubusercontent.com/31427890/187913472-f442766c-fd1b-4102-9e86-60654d05b0cf.JPG)
+![image](https://user-images.githubusercontent.com/31427890/188003926-1cae3a94-4690-412b-be7d-dd7bdbc0052f.png)
+
 
 
