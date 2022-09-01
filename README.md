@@ -17,8 +17,8 @@ You need to have Docker.
 #### ⚙️ Installing
 To compile the code, clone the repo, and run the following commands.
 ```
-$ git clone https://github.com/filipebafica/star_wars_planets_a.git
-$ cd star_wars_planets_a
+$ git clone https://github.com/filipebafica/star_wars_planets_api.git
+$ cd star_wars_planets_api
 $ docker compose build
 $ docker compose up -d
 ```
@@ -57,6 +57,13 @@ To query a planet by name `[GET] /v1/planeta?nome=<nome>`
 
 To remove a planet `[DELETE] /v1/planeta?id=<id>`
 
-
+## 🧪 Testing
+To run the unit tests do the following commands.
+```
+$ docker compose exec app bash
+$ cd tests
+$ go test -v
+```
+![Capturar](https://user-images.githubusercontent.com/31427890/187913472-f442766c-fd1b-4102-9e86-60654d05b0cf.JPG)
 
 
