@@ -2,6 +2,9 @@ package data
 
 import (
 	"context"
+	"net/http"
+	"log"
+	"encoding/json"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,10 +17,31 @@ var Collection *mongo.Collection
 
 type Planet struct {
 	ID						primitive.ObjectID	`json:"_id,omitempty" bson:"_id,omitempty"`
-	Nome					string				`json:"nome,omitempty" bson:"nome,omitempty" validate:"required"`
-	Clima					string				`json:"clima,omitempty" bson:"clima,omitempty" validate:"required"`
-	Terreno					string				`json:"terreno,omitempty" bson:"terreno,omitempty" validate:"required"`
-	Aparicoes_Em_Filmes		int64				`json:"aparicoes_em_filmes,omitempty" bson:"aparicoes_em_filmes,omitempty"`
+	Name					string				`json:"nome,omitempty" bson:"name,omitempty" validate:"required"`
+	Climate					string				`json:"clima,omitempty" bson:"climate,omitempty" validate:"required"`
+	Terrain					string				`json:"terreno,omitempty" bson:"terrain,omitempty" validate:"required"`
+	Films					int					`json:"filmes" bson:"films,omitempty"`
+}
+
+type SWAPIResults struct {
+	Count		int			`json:"count"`
+	Results		[]struct {
+		Name	string		`json:"name"`
+		Films	[]string	`json:"films"`
+	}	`json:"results"`
+}
+
+func GetFilmsPlanetWasIn(planet_name string) SWAPIResults {
+	resp, err := http.Get("https://swapi.dev/api/planets/?search=" + planet_name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	var swapiResults SWAPIResults
+	json.NewDecoder(resp.Body).Decode(&swapiResults)
+
+	return swapiResults
 }
 
 func ConnectDB(ctx context.Context) {

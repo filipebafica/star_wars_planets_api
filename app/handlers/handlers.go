@@ -15,6 +15,8 @@ func CreatePlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 	// define the response content-type as json
 	response.Header().Set("content-type", "application/json")
 
+	defer request.Body.Close()
+
 	// define a variable that will receive the request data
 	var planet data.Planet
 
@@ -31,6 +33,14 @@ func CreatePlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 	// define a context that carries the time that will be used as limit to db operation attempt
 	// skip the callback function since errors will be handled if find does not match
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	// add how many films the planet was in
+	swapiResults := data.GetFilmsPlanetWasIn(planet.Name)
+	if swapiResults.Count == 0 || swapiResults.Results[0].Name != planet.Name {
+		planet.Films = 0
+	} else {
+		planet.Films = len(swapiResults.Results[0].Films)
+	}
 
 	// try to insert data into db
 	// if fails, messege error is returned
@@ -80,7 +90,7 @@ func GetPlanetsEndPoint(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(planets)
 }
 
-func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) { 
+func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 	// define the response content-type as json
 	response.Header().Set("content-type", "application/json")
 
@@ -98,7 +108,7 @@ func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 		filter = bson.M{"_id":v}
 	} else {
 		v := query.Get("nome")
-		filter = bson.M{"nome":v}
+		filter = bson.M{"name":v}
 	}
 
 	// define a context that carries the time that will be used as limit to db operation attempt

@@ -17,9 +17,11 @@ func main() {
 	// define a context that carries the time that will be used as limit to db connection attempt
 	// define a function callback in case timeout is reached
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
 	// will release the resources if application hits time out
 	// this is going to be executed when the function reaches the end of its scope
 	defer cancel()
+
 	// handle db connection
 	data.ConnectDB(ctx)
 	defer data.DisconnectDB(ctx)
