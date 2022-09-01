@@ -25,14 +25,14 @@ $ docker compose up -d
 
 ## 🎈 How to Use
 The following endpoints are available on localhost:8000\
-To insert a planet: `[POST] /v1/planeta`
+To insert a planet: `[POST] /v1/planeta`\
+Mandatory fields:
 ```
 {
   "nome": "Coruscant",
   "clima": "arido",
   "terreno": "deserto"
 }
-
 ```
 To retrieve all planets: `[GET] /v1/planetas`
 ```
