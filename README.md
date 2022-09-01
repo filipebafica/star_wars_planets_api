@@ -53,7 +53,7 @@ To retrieve all planets: `[GET] /v1/planetas`
 ```
 To query a planet by ID `[GET] /v1/planeta?id=<id>`
 
-To query a planet by name `[GET] /v1/planeta?nome=<nome>`
+To query a planet by name `[GET] /v1/planeta?nome=<name>`
 
 To remove a planet `[DELETE] /v1/planeta?id=<id>`
 
