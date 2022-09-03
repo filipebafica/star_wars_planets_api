@@ -26,7 +26,7 @@ $ docker compose up -d
 ## 🎈 How to Use
 The following endpoints are available on localhost:8000\
 To insert a planet: `[POST] /v1/planeta`\
-Mandatory fields:
+The `nome`, `clima` and `terreno` fields are mandatory. `_id` and `filmes` will be added automatically. 
 ```
 {
   "nome": "Coruscant",
