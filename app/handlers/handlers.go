@@ -77,7 +77,7 @@ func GetPlanetsEndPoint(response http.ResponseWriter, request *http.Request) {
 	// define a 'dynamically-sized array' that will receive queries from db
 	var planets []data.Planet
 
-	// iteraates through cursor and append to the planets slice
+	// iterates through cursor and append to the planets slice
 	// if fails, messege error is returned
 	if err := cursor.All(ctx, &planets); err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
@@ -134,7 +134,7 @@ func GetPlanetEndPoint(response http.ResponseWriter, request *http.Request) {
 	// define a 'dynamically-sized array' that will receive queries from db
 	var planet []data.Planet
 
-	// iteraates through cursor and appen to the planet slice
+	// iterates through cursor and append to the planet slice
 	// if fails, messege error is returned
 	if err := cursor.All(ctx, &planet); err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
